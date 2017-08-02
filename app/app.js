@@ -242,33 +242,33 @@ function receivedMessage(event) {
  *
  */
 function sendTextMessage(recipientId, messageText) {
-    var messageData = {
-      recipient: {
-        id: recipientId
-      },
-      message: {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "button",
-            text: messageText,
-            buttons:[{
-              type: "web_url",
-              url: "https://www.facebook.com/pancitosdevc/",
-              title: "Nuestra pagina Web"
-            }, {
-              type: "postback",
-              title: "Tipos de Panes",
-              payload: "DEVELOPER_DEFINED_PAYLOAD"
-            }, {
-              type: "phone_number",
-              title: "Llámanos",
-              payload: "+16505551234"
-            }]
-          }
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: messageText,
+          buttons:[{
+            type: "web_url",
+            url: "https://www.facebook.com/pancitosdevc/",
+            title: "Nuestra pagina Web"
+          }, {
+            type: "postback",
+            title: "Tipos de Panes",
+            payload: "DEVELOPER_DEFINED_PAYLOAD"
+          }, {
+            type: "phone_number",
+            title: "Llámanos",
+            payload: "+16505551234"
+          }]
         }
       }
-    };
+    }
+  };
 
   callSendAPI(messageData);
 }

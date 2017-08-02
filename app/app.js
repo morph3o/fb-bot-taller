@@ -46,7 +46,7 @@ const SERVER_URL = (process.env.SERVER_URL) ?
   config.get('serverURL');
 
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
-  logger.error("Missing config values");
+  logger.error('Missing config values');
   process.exit(1);
 }
 
@@ -56,10 +56,10 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
       req.query['hub.verify_token'] === VALIDATION_TOKEN) {
-    logger.info("Validating webhook");
+    logger.info('Validating webhook');
     res.status(200).send(req.query['hub.challenge']);
   } else {
-    logger.error("Failed validation. Make sure the validation tokens match.");
+    logger.error('Failed validation. Make sure the validation tokens match.');
     res.sendStatus(403);          
   }  
 });
@@ -94,7 +94,7 @@ app.post('/webhook', function (req, res) {
         } else if (messagingEvent.account_linking) {
           receivedAccountLink(messagingEvent);
         } else {
-          logger.info("Webhook received unknown messagingEvent: ", messagingEvent);
+          logger.info('Webhook received unknown messagingEvent: ', messagingEvent);
         }
       });
     });
@@ -114,10 +114,10 @@ app.get('/authorize', function(req, res) {
 
   // Authorization Code should be generated per user by the developer. This will 
   // be passed to the Account Linking callback.
-  var authCode = "1234567890";
+  var authCode = '1234567890';
 
   // Redirect users to this URI on successful login
-  var redirectURISuccess = redirectURI + "&authorization_code=" + authCode;
+  var redirectURISuccess = redirectURI + '&authorization_code=' + authCode;
 
   res.render('authorize', {
     accountLinkingToken: accountLinkingToken,
@@ -133,12 +133,12 @@ app.get('/authorize', function(req, res) {
  *
  */
 function verifyRequestSignature(req, res, buf) {
-  var signature = req.headers["x-hub-signature"];
+  var signature = req.headers['x-hub-signature'];
 
   if (!signature) {
     // For testing, let's log an error. In production, you should throw an 
     // error.
-    logger.error("Couldn't validate the signature.");
+    logger.error('Couldn\'t validate the signature.');
   } else {
     var elements = signature.split('=');
     var method = elements[0];
@@ -149,7 +149,7 @@ function verifyRequestSignature(req, res, buf) {
                         .digest('hex');
 
     if (signatureHash != expectedHash) {
-      throw new Error("Couldn't validate the request signature.");
+      throw new Error('Couldn\'t validate the request signature.');
     }
   }
 }
@@ -174,13 +174,13 @@ function receivedAuthentication(event) {
   // plugin.
   var passThroughParam = event.optin.ref;
 
-  logger.info("Received authentication for user %d and page %d with pass " +
-    "through param '%s' at %d", senderID, recipientID, passThroughParam, 
+  logger.info('Received authentication for user %d and page %d with pass ' +
+    'through param "%s" at %d', senderID, recipientID, passThroughParam,
     timeOfAuth);
 
   // When an authentication is received, we'll send a message back to the sender
   // to let them know it was successful.
-  sendTextMessage(senderID, "Authentication successful");
+  sendTextMessage(senderID, 'Authentication successful');
 }
 
 /**
@@ -198,7 +198,7 @@ function receivedMessage(event) {
   var timeOfMessage = event.timestamp;
   var message = event.message;
 
-  logger.info("Received message for user %d and page %d at %d with message:", 
+  logger.info('Received message for user %d and page %d at %d with message:',
     senderID, recipientID, timeOfMessage);
   logger.info(JSON.stringify(message));
 
@@ -214,15 +214,15 @@ function receivedMessage(event) {
 
   if (isEcho) {
     // Just logging message echoes to console
-    logger.info("Received echo for message %s and app %d with metadata %s", 
+    logger.info('Received echo for message %s and app %d with metadata %s',
       messageId, appId, metadata);
     return;
   } else if (quickReply) {
     var quickReplyPayload = quickReply.payload;
-    logger.info("Quick reply for message %s with payload %s",
+    logger.info('Quick reply for message %s with payload %s',
       messageId, quickReplyPayload);
 
-    sendTextMessage(senderID, "Quick reply tapped");
+    sendTextMessage(senderID, 'Quick reply tapped');
     return;
   }
 
@@ -232,7 +232,7 @@ function receivedMessage(event) {
         sendTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
+    sendTextMessage(senderID, 'Message with attachment received');
   }
 }
 
@@ -247,7 +247,7 @@ function sendTextMessage(recipientId, messageText) {
     },
     message: {
       text: messageText,
-      metadata: "DEVELOPER_DEFINED_METADATA"
+      metadata: 'DEVELOPER_DEFINED_METADATA'
     }
   };
 
@@ -271,14 +271,14 @@ function callSendAPI(messageData) {
       var messageId = body.message_id;
 
       if (messageId) {
-        logger.info("Successfully sent message with id %s to recipient %s", 
+        logger.info('Successfully sent message with id %s to recipient %s',
           messageId, recipientId);
       } else {
-      logger.info("Successfully called Send API for recipient %s", 
+      logger.info('Successfully called Send API for recipient %s',
         recipientId);
       }
     } else {
-      logger.error("Failed calling Send API", response.statusCode, response.statusMessage, body.error);
+      logger.error('Failed calling Send API', response.statusCode, response.statusMessage, body.error);
     }
   });  
 }
@@ -300,12 +300,12 @@ function receivedDeliveryConfirmation(event) {
 
     if (messageIDs) {
         messageIDs.forEach(function(messageID) {
-            logger.info("Received delivery confirmation for message ID: %s",
+            logger.info('Received delivery confirmation for message ID: %s',
                 messageID);
         });
     }
 
-    logger.info("All message before %d were delivered.", watermark);
+    logger.info('All message before %d were delivered.', watermark);
 }
 
 
@@ -325,12 +325,12 @@ function receivedPostback(event) {
     // button for Structured Messages.
     var payload = event.postback.payload;
 
-    logger.info("Received postback for user %d and page %d with payload '%s' " +
-        "at %d", senderID, recipientID, payload, timeOfPostback);
+    logger.info('Received postback for user %d and page %d with payload "%s" ' +
+        'at %d', senderID, recipientID, payload, timeOfPostback);
 
     // When a postback is called, we'll send a message back to the sender to
     // let them know it was successful
-    sendTextMessage(senderID, "Postback called");
+    sendTextMessage(senderID, 'Postback called');
 }
 
 /*
@@ -348,8 +348,8 @@ function receivedMessageRead(event) {
     var watermark = event.read.watermark;
     var sequenceNumber = event.read.seq;
 
-    logger.info("Received message read event for watermark %d and sequence " +
-        "number %d", watermark, sequenceNumber);
+    logger.info('Received message read event for watermark %d and sequence ' +
+        'number %d', watermark, sequenceNumber);
 }
 
 /*
@@ -367,8 +367,8 @@ function receivedAccountLink(event) {
     var status = event.account_linking.status;
     var authCode = event.account_linking.authorization_code;
 
-    logger.info("Received account link event with for user %d with status %s " +
-        "and auth code %s ", senderID, status, authCode);
+    logger.info('Received account link event with for user %d with status %s ' +
+        'and auth code %s ', senderID, status, authCode);
 }
 
 // Start server

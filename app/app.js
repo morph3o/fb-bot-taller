@@ -229,7 +229,8 @@ function receivedMessage(event) {
   if (messageText) {
     switch (messageText) {
       default:
-        sendTextMessage(senderID, messageText);
+        var welcomeMessage = 'Hola! Bienvenido a Pancitos DevC. En que te podemos ayudar?';
+        sendTextMessage(senderID, welcomeMessage);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, 'Message with attachment received');

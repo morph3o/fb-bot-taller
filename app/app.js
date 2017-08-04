@@ -26,6 +26,9 @@ app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
 
 
+const TIPOS_PANES = 'TIPOS_PANES';
+
+
 /**
  * Verificando que los datos de configuracion no están vacíos
  * */
@@ -228,6 +231,9 @@ function receivedMessage(event) {
 
   if (messageText) {
     switch (messageText) {
+      case TIPOS_PANES:
+        sendTiposDePanes(senderID);
+        break;
       default:
         var welcomeMessage = 'Hola! Bienvenido a Pancitos DevC. En que te podemos ayudar?';
         sendTextMessage(senderID, welcomeMessage);
@@ -235,6 +241,19 @@ function receivedMessage(event) {
   } else if (messageAttachments) {
     sendTextMessage(senderID, 'Message with attachment received');
   }
+}
+
+function sendTiposDePanes(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'mostrar tipos de panes'
+    }
+  };
+
+  callSendAPI(messageData);
 }
 
 /*
@@ -259,7 +278,7 @@ function sendTextMessage(recipientId, messageText) {
           }, {
             type: "postback",
             title: "Tipos de Panes",
-            payload: "DEVELOPER_DEFINED_PAYLOAD"
+            payload: TIPOS_PANES
           }, {
             type: "phone_number",
             title: "Llámanos",
@@ -347,9 +366,11 @@ function receivedPostback(event) {
     logger.info('Received postback for user %d and page %d with payload "%s" ' +
         'at %d', senderID, recipientID, payload, timeOfPostback);
 
-    // When a postback is called, we'll send a message back to the sender to
-    // let them know it was successful
-    sendTextMessage(senderID, 'Postback called');
+    switch (payload) {
+      case TIPOS_PANES:
+        sendTiposDePanes(senderID);
+        break;
+    }
 }
 
 /*

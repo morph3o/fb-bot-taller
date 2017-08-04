@@ -249,7 +249,27 @@ function sendTiposDePanes(recipientId) {
       id: recipientId
     },
     message: {
-      text: 'mostrar tipos de panes'
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "Pan Pita",
+            subtitle: "El más exquisito pan pita del mundo",
+            item_url: "http://www.pancitosdevc.cl/panpita",
+            image_url: "https://s-media-cache-ak0.pinimg.com/originals/55/4f/fb/554ffb0678dca55167e0d74ee0806a4f.jpg",
+            buttons: [{
+              type: "web_url",
+              url: "http://www.pancitosdevc.cl/panpita",
+              title: "Open Web URL"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }],
+          }]
+        }
+      }
     }
   };
 

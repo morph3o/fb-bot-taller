@@ -267,6 +267,34 @@ function sendTiposDePanes(recipientId) {
               title: "Call Postback",
               payload: "Payload for first bubble",
             }],
+          }, {
+            title: "Pan Batido",
+            subtitle: "El más exquisito pan batido del mundo",
+            item_url: "http://www.pancitosdevc.cl/panpita",
+            image_url: "https://imageneselsalvador.files.wordpress.com/2015/04/pan-batido.jpg",
+            buttons: [{
+              type: "web_url",
+              url: "http://www.pancitosdevc.cl/panpita",
+              title: "Open Web URL"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }],
+          }, {
+            title: "Dobladitas",
+            subtitle: "La más exquisita dobladita del mundo",
+            item_url: "http://www.pancitosdevc.cl/panpita",
+            image_url: "https://gcdn.emol.cl/cocina/files/2015/09/Dobladitas.jpg",
+            buttons: [{
+              type: "web_url",
+              url: "http://www.pancitosdevc.cl/panpita",
+              title: "Open Web URL"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }],
           }]
         }
       }

@@ -264,8 +264,8 @@ function sendTiposDePanes(recipientId) {
               title: "Open Web URL"
             }, {
               type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
+              title: "Comprar 1 kg",
+              payload: 'COMPRAR_PITA',
             }],
           }, {
             title: "Pan Batido",
@@ -278,8 +278,8 @@ function sendTiposDePanes(recipientId) {
               title: "Open Web URL"
             }, {
               type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
+              title: "Comprar 1 kg",
+              payload: 'COMPRAR_BATIDO',
             }],
           }, {
             title: "Dobladitas",
@@ -292,8 +292,8 @@ function sendTiposDePanes(recipientId) {
               title: "Open Web URL"
             }, {
               type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
+              title: "Comprar 1 kg",
+              payload: 'COMPRAR_DOBLADITAS',
             }],
           }]
         }
@@ -331,6 +331,58 @@ function sendTextMessage(recipientId, messageText) {
             type: "phone_number",
             title: "Llámanos",
             payload: "+16505551234"
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+function sendReceiptMessage(recipientId) {
+  // Generate a random receipt ID as the API requires a unique ID
+  var receiptId = "Orden" + Math.floor(Math.random()*1000);
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message:{
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "receipt",
+          recipient_name: "Peter Chang",
+          order_number: receiptId,
+          currency: "CLP",
+          payment_method: "Visa 1234",
+          timestamp: "1428444852",
+          elements: [{
+            title: "Pan Pita",
+            subtitle: "1KG de Pan Pita",
+            quantity: 1,
+            price: 1000,
+            currency: "CLP",
+            image_url: 'https://s-media-cache-ak0.pinimg.com/originals/55/4f/fb/554ffb0678dca55167e0d74ee0806a4f.jpg'
+          }],
+          address: {
+            street_1: "1 Hacker Way",
+            street_2: "",
+            city: "Menlo Park",
+            postal_code: "94025",
+            state: "CA",
+            country: "US"
+          },
+          summary: {
+            subtotal: 1000,
+            shipping_cost: 0,
+            total_tax: 190,
+            total_cost: 1190
+          },
+          adjustments: [{
+            name: "Primera compra",
+            amount: -50
           }]
         }
       }
@@ -411,12 +463,17 @@ function receivedPostback(event) {
     // button for Structured Messages.
     var payload = event.postback.payload;
 
+    logger.info(typeof payload);
+
     logger.info('Received postback for user %d and page %d with payload "%s" ' +
         'at %d', senderID, recipientID, payload, timeOfPostback);
 
     switch (payload) {
       case TIPOS_PANES:
         sendTiposDePanes(senderID);
+        break;
+      case 'COMPRAR_PITA':
+        sendReceiptMessage(senderID);
         break;
     }
 }
